@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+<head>
+	<title>Profile - <%=@user.username%></title>
+	<style>
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			background-color:  #FF69B4 ;
+			position: fixed;
+			top: 10px;
+			float: left;
+			border: 2px solid #fefefe;
+		}
+
+		p {
+			font-family: sans-serif;
+			color: white;
+			font-weight: bold;
+		}
+
+		li {
+			float:left;
+		}
+
+		li a {
+			text-shadow: 2px 2px black;
+			font-size: large;
+			display: block;
+			color: white;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+		}
+
+		li a:hover:not(.activePage) {
+			background-color: #cc5490 ;
+		}
+
+		.activePage {
+			background-color: #cc5490 ;
+		}
+
+		.paddingForNavigation{
+			padding-left: 50px;
+			padding-top: 20px;
+
+		}
+
+		.background {
+			background: url("/weeb2.jpg") no-repeat center fixed;
+			background-size: cover;
+		}
+
+		.currentUser {
+			float:right;
+      		text-shadow: 2px 2px black;
+			border: 2px solid white;
+			background-color:  #FF69B4 ;
+			width: 750px;
+			text-align: center;
+		
+		 }
+
+		 .container {
+		 	 margin: 0 auto;
+			 border: 1px solid white;
+			 background-color:  #FF69B4 ;
+			 width: 1000px;
+			 height: 1000px;
+
+
+		}
+
+		.topad{
+			padding-top: 100px;
+		}
+
+
+		table{
+			border-collapse: collapse;
+			width: 100%;
+		}
+
+		th{
+			text-shadow: 2px 2px black;
+			font-family:arial black;
+			color: white;
+			font-weight: bold;
+			height: 40px;
+		}
+		td{
+			font-family:arial black;
+			color: white;
+			font-weight: bold;
+			width: 40px:
+		}
+
+		center {
+			margin: auto;
+			text-shadow: 2px 2px black;
+			border: 2px solid white;
+			padding: 15px;
+			font-family: arial black;
+			color: white;
+			font-weight: bold;
+		}
+
+		.wrap {
+		    width: auto;
+            height: auto;
+            min-width: 100%;
+            min-height: 100%;
+	     }
+
+
+	</style>
+</head>
+<body class="background">
+  <div class ="wrap">
+	<div class="currentUser"><p><%= @user.username %></p></div>
+	 <div class="topad">
+		 <div class="container">
+		    <table>
+	        	<center>REPLAYS</center> <center>Will only work with less than 100 inputs and properly connected drive</center>
+				<tr>
+		        	<th>Replay</th>
+		        	<th>Time</th>
+		        	<th>Stage</th>
+		      	</tr>
+				<% for i in 1..@count do %>
+					<% if i <= 20 && (i + ((get_page-1)*20)) <= @count %>
+						<tr>
+							<th><a href="/game?stage=<%= get_stage((i + ((get_page-1)*2))-1)%>&replay= <%= get_replay (i+(get_page-1)*20-1) %>"style="color: white" > Link </a></th>
+							<th><%= get_time((i + ((get_page-1)*20))-1) %> </th>
+							<th> <%= get_stage((i + ((get_page-1)*20))-1)%> </th>
+						</tr>
+						<% end %>
+					<% end %>
+					<div style="position: absolute; bottom: 5px; right: 5px">
+					  <% if @count >20 %>
+						<% if get_page - 1 >= 1 %>
+							<a href="/replays?page=<%=(get_page)-1%>"><%="[<<]"%> </a>
+							<% if get_page - 1 > 1 %>
+							<%="..."%>
+							<% end %>
+						<% end %>
+						<% if get_page == 1 %>
+								<%=[1]%>
+								<a href="/replays?page=<%=2%>"><%=[2]%> </a>
+						<% end %>
+						<% if get_page == @intpages %>
+								<a href="/replays?page=<%=@intpages-1%>"><%=[@intpages-1]%> </a>
+								<%=[@intpages]%>
+						<% end %>
+						<% if get_page != @intpages && get_page != 1%>
+								<a href="/replays?page=<%=(get_page-1)%>"><%=[get_page-1]%> </a>
+								<%=[get_page]%>
+								<a href="/replays?page=<%=(get_page+1)%>"><%=[get_page+1]%> </a>
+						<% end %>
+						<% if get_page+ 1 <= @intpages %>
+							<% if get_page+ 1 < @intpages %>
+							<%="..."%>
+							<% end %>
+							<a href="/replays?page=<%=(get_page)+1%>"><%="[>>]"%> </a>
+						<% end %>
+					  <% end %>
+					  <% if @count <= 20%>
+					    <%=[1]%>
+					  <% end %>
+					</div>
+			</table>
+		</div>
+			
+  <div class = "paddingForNavigation">
+	  <div>
+		<ul>
+			<li><a href="/profile" >Campaign</a></li>
+			<li><a class = "activePage"> Replays</a></li>
+      		<li><a href="/highscores?page=1"> Hi-Scores</a></li>
+			<li><a>Coop</a></li>
+			<li><a href="/driveauth">Connect Drive</a></li>
+			<li><a href="/logout">Log Out</a></li>
+		</ul>
+	  <div>
+   <div>
+ </div>
+</body>
+</html>

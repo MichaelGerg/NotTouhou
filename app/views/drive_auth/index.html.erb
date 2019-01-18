@@ -1,0 +1,55 @@
+
+<!doctype html>
+<html>
+<head>
+	<title>Nottouhou - Drive Authorization</title>
+	<% if @user.drive_refresh_token.nil? then %>
+		<meta name="authenticity-token" id="authenticity-token" content="<%= form_authenticity_token %>" />
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+		<script>
+		function start() {
+			gapi.load("auth2", () => {
+				let auth2 = gapi.auth2.init({
+					client_id: "520788856982-o79jg4d27s9ogvs358unqnntiv7k52ah.apps.googleusercontent.com",
+					scope: "https://www.googleapis.com/auth/drive.file"
+				});
+				auth2.grantOfflineAccess().then((authResult) => {
+					let code = authResult["code"];
+					if (code) {
+						$.post(window.location, {
+							authcode: code,
+							authenticity_token: $("#authenticity-token").attr("content")
+						}, (postResult) => {
+							if (postResult["success"]) {
+								$("body").html("Success. Returning to profile.");
+								setTimeout(() => {
+									window.location.replace(window.location + "/../profile");
+								}, 2000);
+							} else {
+								let error = postResult["error"];
+								if (!error) {
+									error = "Server-side authentication failed.";
+								}
+								$("body").html(error);
+							}
+
+						});
+					} else {
+						$("body").html("Auth request failed.");
+					}
+				});
+			});
+		}
+		</script>
+	<% end %>
+</head>
+<body>
+	<% if @user.drive_refresh_token.nil? then %>
+		Your browser will likely prevent the sign-in popup. If so, allow the popup (reloading the page might be necessary).
+	<% else %>
+		<!-- this doesn't work and i have no idea why -->
+		You have already connected Google Drive.
+	<% end %>
+</body>
+</html>
